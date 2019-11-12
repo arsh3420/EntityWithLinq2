@@ -1,0 +1,414 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="HotelBookingsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="checkouts">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Address_id" Type="int" Nullable="false" />
+          <Property Name="Room_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Customeraddresses">
+          <Key>
+            <PropertyRef Name="Address_id" />
+          </Key>
+          <Property Name="Address_id" Type="int" Nullable="false" />
+          <Property Name="street" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="city" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="state" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CustomerRegestration">
+          <Key>
+            <PropertyRef Name="CustomerID" />
+          </Key>
+          <Property Name="CustomerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstNAME" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastNAME" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="EMAILID" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PHONE" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Hotelreviews">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Room_id" Type="int" Nullable="false" />
+          <Property Name="Customer_name" Type="varchar" MaxLength="255" />
+          <Property Name="content" Type="varchar" MaxLength="255" />
+          <Property Name="rating" Type="int" />
+          <Property Name="Booking_date" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="50" />
+          <Property Name="password" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Rooms">
+          <Key>
+            <PropertyRef Name="Room_id" />
+          </Key>
+          <Property Name="Room_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Roomno" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Beds" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Floor" Type="char" MaxLength="12" />
+          <Property Name="Type" Type="char" MaxLength="12" />
+        </EntityType>
+        <Association Name="FK__checkouts__Addre__5EBF139D">
+          <End Role="CustomerRegestration" Type="Self.CustomerRegestration" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="checkouts" Type="Self.checkouts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerRegestration">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="checkouts">
+              <PropertyRef Name="Address_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__checkouts__Room___5DCAEF64">
+          <End Role="Rooms" Type="Self.Rooms" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="checkouts" Type="Self.checkouts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rooms">
+              <PropertyRef Name="Room_id" />
+            </Principal>
+            <Dependent Role="checkouts">
+              <PropertyRef Name="Room_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__checkouts__Room___628FA481">
+          <End Role="Rooms" Type="Self.Rooms" Multiplicity="1" />
+          <End Role="checkouts" Type="Self.checkouts" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rooms">
+              <PropertyRef Name="Room_id" />
+            </Principal>
+            <Dependent Role="checkouts">
+              <PropertyRef Name="Room_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Customera__Addre__5CD6CB2B">
+          <End Role="CustomerRegestration" Type="Self.CustomerRegestration" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Customeraddresses" Type="Self.Customeraddresses" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerRegestration">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="Customeraddresses">
+              <PropertyRef Name="Address_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Hotelrevi__Room___5FB337D6">
+          <End Role="Rooms" Type="Self.Rooms" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Hotelreviews" Type="Self.Hotelreviews" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rooms">
+              <PropertyRef Name="Room_id" />
+            </Principal>
+            <Dependent Role="Hotelreviews">
+              <PropertyRef Name="Room_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="sp_REGISTERCUSTOMER" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Task" Type="int" Mode="In" />
+          <Parameter Name="FirstNAME" Type="nvarchar" Mode="In" />
+          <Parameter Name="LastNAME" Type="nvarchar" Mode="In" />
+          <Parameter Name="EMAILID" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="PHONE" Type="nvarchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="HotelBookingsModelStoreContainer">
+          <EntitySet Name="checkouts" EntityType="Self.checkouts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Customeraddresses" EntityType="Self.Customeraddresses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CustomerRegestration" EntityType="Self.CustomerRegestration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Hotelreviews" EntityType="Self.Hotelreviews" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Login" EntityType="Self.Login" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Rooms" EntityType="Self.Rooms" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__checkouts__Addre__5EBF139D" Association="Self.FK__checkouts__Addre__5EBF139D">
+            <End Role="CustomerRegestration" EntitySet="CustomerRegestration" />
+            <End Role="checkouts" EntitySet="checkouts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__checkouts__Room___5DCAEF64" Association="Self.FK__checkouts__Room___5DCAEF64">
+            <End Role="Rooms" EntitySet="Rooms" />
+            <End Role="checkouts" EntitySet="checkouts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__checkouts__Room___628FA481" Association="Self.FK__checkouts__Room___628FA481">
+            <End Role="Rooms" EntitySet="Rooms" />
+            <End Role="checkouts" EntitySet="checkouts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Customera__Addre__5CD6CB2B" Association="Self.FK__Customera__Addre__5CD6CB2B">
+            <End Role="CustomerRegestration" EntitySet="CustomerRegestration" />
+            <End Role="Customeraddresses" EntitySet="Customeraddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Hotelrevi__Room___5FB337D6" Association="Self.FK__Hotelrevi__Room___5FB337D6">
+            <End Role="Rooms" EntitySet="Rooms" />
+            <End Role="Hotelreviews" EntitySet="Hotelreviews" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="HotelBookingsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="checkout">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Address_id" Type="Int32" Nullable="false" />
+          <Property Name="Room_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="CustomerRegestration" Relationship="Self.FK__checkouts__Addre__5EBF139D" FromRole="checkouts" ToRole="CustomerRegestration" />
+          <NavigationProperty Name="Room" Relationship="Self.FK__checkouts__Room___5DCAEF64" FromRole="checkouts" ToRole="Rooms" />
+        </EntityType>
+        <EntityType Name="Customeraddress">
+          <Key>
+            <PropertyRef Name="Address_id" />
+          </Key>
+          <Property Name="Address_id" Type="Int32" Nullable="false" />
+          <Property Name="street" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="city" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="state" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="CustomerRegestration" Relationship="Self.FK__Customera__Addre__5CD6CB2B" FromRole="Customeraddresses" ToRole="CustomerRegestration" />
+        </EntityType>
+        <EntityType Name="CustomerRegestration">
+          <Key>
+            <PropertyRef Name="CustomerID" />
+          </Key>
+          <Property Name="CustomerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="EMAILID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PHONE" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="checkouts" Relationship="Self.FK__checkouts__Addre__5EBF139D" FromRole="CustomerRegestration" ToRole="checkouts" />
+          <NavigationProperty Name="Customeraddress" Relationship="Self.FK__Customera__Addre__5CD6CB2B" FromRole="CustomerRegestration" ToRole="Customeraddresses" />
+        </EntityType>
+        <EntityType Name="Hotelreview">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Room_id" Type="Int32" Nullable="false" />
+          <Property Name="Customer_name" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="content" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="rating" Type="Int32" />
+          <Property Name="Booking_date" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Room" Relationship="Self.FK__Hotelrevi__Room___5FB337D6" FromRole="Hotelreviews" ToRole="Rooms" />
+        </EntityType>
+        <EntityType Name="Login">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Room">
+          <Key>
+            <PropertyRef Name="Room_id" />
+          </Key>
+          <Property Name="Room_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Roomno" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Beds" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Floor" Type="String" MaxLength="12" FixedLength="true" Unicode="false" />
+          <Property Name="Type" Type="String" MaxLength="12" FixedLength="true" Unicode="false" />
+          <NavigationProperty Name="checkouts" Relationship="Self.FK__checkouts__Room___5DCAEF64" FromRole="Rooms" ToRole="checkouts" />
+          <NavigationProperty Name="Hotelreviews" Relationship="Self.FK__Hotelrevi__Room___5FB337D6" FromRole="Rooms" ToRole="Hotelreviews" />
+        </EntityType>
+        <Association Name="FK__checkouts__Addre__5EBF139D">
+          <End Role="CustomerRegestration" Type="Self.CustomerRegestration" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="checkouts" Type="Self.checkout" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerRegestration">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="checkouts">
+              <PropertyRef Name="Address_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__checkouts__Room___5DCAEF64">
+          <End Role="Rooms" Type="Self.Room" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="checkouts" Type="Self.checkout" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rooms">
+              <PropertyRef Name="Room_id" />
+            </Principal>
+            <Dependent Role="checkouts">
+              <PropertyRef Name="Room_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Customera__Addre__5CD6CB2B">
+          <End Role="CustomerRegestration" Type="Self.CustomerRegestration" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Customeraddresses" Type="Self.Customeraddress" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="CustomerRegestration">
+              <PropertyRef Name="CustomerID" />
+            </Principal>
+            <Dependent Role="Customeraddresses">
+              <PropertyRef Name="Address_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Hotelrevi__Room___5FB337D6">
+          <End Role="Rooms" Type="Self.Room" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Hotelreviews" Type="Self.Hotelreview" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rooms">
+              <PropertyRef Name="Room_id" />
+            </Principal>
+            <Dependent Role="Hotelreviews">
+              <PropertyRef Name="Room_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="HotelBookingsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="checkouts" EntityType="Self.checkout" />
+          <EntitySet Name="Customeraddresses" EntityType="Self.Customeraddress" />
+          <EntitySet Name="CustomerRegestrations" EntityType="Self.CustomerRegestration" />
+          <EntitySet Name="Hotelreviews" EntityType="Self.Hotelreview" />
+          <EntitySet Name="Logins" EntityType="Self.Login" />
+          <EntitySet Name="Rooms" EntityType="Self.Room" />
+          <AssociationSet Name="FK__checkouts__Addre__5EBF139D" Association="Self.FK__checkouts__Addre__5EBF139D">
+            <End Role="CustomerRegestration" EntitySet="CustomerRegestrations" />
+            <End Role="checkouts" EntitySet="checkouts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__checkouts__Room___5DCAEF64" Association="Self.FK__checkouts__Room___5DCAEF64">
+            <End Role="Rooms" EntitySet="Rooms" />
+            <End Role="checkouts" EntitySet="checkouts" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Customera__Addre__5CD6CB2B" Association="Self.FK__Customera__Addre__5CD6CB2B">
+            <End Role="CustomerRegestration" EntitySet="CustomerRegestrations" />
+            <End Role="Customeraddresses" EntitySet="Customeraddresses" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Hotelrevi__Room___5FB337D6" Association="Self.FK__Hotelrevi__Room___5FB337D6">
+            <End Role="Rooms" EntitySet="Rooms" />
+            <End Role="Hotelreviews" EntitySet="Hotelreviews" />
+          </AssociationSet>
+          <FunctionImport Name="sp_REGISTERCUSTOMER">
+            <Parameter Name="Task" Mode="In" Type="Int32" />
+            <Parameter Name="FirstNAME" Mode="In" Type="String" />
+            <Parameter Name="LastNAME" Mode="In" Type="String" />
+            <Parameter Name="EMAILID" Mode="In" Type="String" />
+            <Parameter Name="PHONE" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HotelBookingsModelStoreContainer" CdmEntityContainer="HotelBookingsEntities">
+          <EntitySetMapping Name="checkouts">
+            <EntityTypeMapping TypeName="HotelBookingsModel.checkout">
+              <MappingFragment StoreEntitySet="checkouts">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Address_id" ColumnName="Address_id" />
+                <ScalarProperty Name="Room_id" ColumnName="Room_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Customeraddresses">
+            <EntityTypeMapping TypeName="HotelBookingsModel.Customeraddress">
+              <MappingFragment StoreEntitySet="Customeraddresses">
+                <ScalarProperty Name="Address_id" ColumnName="Address_id" />
+                <ScalarProperty Name="street" ColumnName="street" />
+                <ScalarProperty Name="city" ColumnName="city" />
+                <ScalarProperty Name="state" ColumnName="state" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CustomerRegestrations">
+            <EntityTypeMapping TypeName="HotelBookingsModel.CustomerRegestration">
+              <MappingFragment StoreEntitySet="CustomerRegestration">
+                <ScalarProperty Name="CustomerID" ColumnName="CustomerID" />
+                <ScalarProperty Name="FirstNAME" ColumnName="FirstNAME" />
+                <ScalarProperty Name="LastNAME" ColumnName="LastNAME" />
+                <ScalarProperty Name="EMAILID" ColumnName="EMAILID" />
+                <ScalarProperty Name="PHONE" ColumnName="PHONE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Hotelreviews">
+            <EntityTypeMapping TypeName="HotelBookingsModel.Hotelreview">
+              <MappingFragment StoreEntitySet="Hotelreviews">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Room_id" ColumnName="Room_id" />
+                <ScalarProperty Name="Customer_name" ColumnName="Customer_name" />
+                <ScalarProperty Name="content" ColumnName="content" />
+                <ScalarProperty Name="rating" ColumnName="rating" />
+                <ScalarProperty Name="Booking_date" ColumnName="Booking_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Logins">
+            <EntityTypeMapping TypeName="HotelBookingsModel.Login">
+              <MappingFragment StoreEntitySet="Login">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rooms">
+            <EntityTypeMapping TypeName="HotelBookingsModel.Room">
+              <MappingFragment StoreEntitySet="Rooms">
+                <ScalarProperty Name="Room_id" ColumnName="Room_id" />
+                <ScalarProperty Name="Roomno" ColumnName="Roomno" />
+                <ScalarProperty Name="Beds" ColumnName="Beds" />
+                <ScalarProperty Name="Floor" ColumnName="Floor" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_REGISTERCUSTOMER" FunctionName="HotelBookingsModel.Store.sp_REGISTERCUSTOMER" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
